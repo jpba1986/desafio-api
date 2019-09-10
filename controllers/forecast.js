@@ -1,3 +1,6 @@
+const fetch = require('node-fetch');
+
+
 exports.getLocations = (req, res, next )=>{
     res.status(200).json({
         location:[{
@@ -17,4 +20,15 @@ exports.postDirections = (req, res, next) =>{
         message:'done',
         post:{ latitude: latitude, longitude: longitude, timezone: timezone}
     });
+};
+
+exports.getForecastData = (req, res, next) =>{
+    const latitud  =req.body.latitud;
+    const longitud =req.body.longitud;
+    const darkskyAPIKEY = '2dcd0120d4db2f169cf0ca7fe725803e';
+    //const api_url = 'https://api.darksky.net/forecast/'+ darkskyAPIKEY +'/'+  latitud +','+ longitud +'?exclude=hourly,flags,minutely,daily,alerts,currently';
+    const api_url =`https://api.darksky.net/forecast/2dcd0120d4db2f169cf0ca7fe725803e/42.3601,-71.0589`;
+    const fetch_response = fetch(api_url);    
+    //const json = fetch_response.json();
+    res.json(fetch_response);   
 };
