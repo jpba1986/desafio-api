@@ -17,4 +17,6 @@ app.use((req, res ,next) =>{
 
 app.use('/forecast', forecastRoutes);
 
-app.listen(8080);
+app.listen(8080, () => {
+    console.log('Server started!')
+  });
