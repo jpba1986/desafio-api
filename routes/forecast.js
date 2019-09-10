@@ -4,6 +4,9 @@ const forecastController = require('../controllers/forecast');
 
 const router = express.Router();
 
-router.get('/getLocations', forecastController.getForecast);
+// GET
+router.get('/getLocations', forecastController.getLocations);
 
+// POST
+router.post('/postDirections', forecastController.postDirections);
 module.exports = router;
