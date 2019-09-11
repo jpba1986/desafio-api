@@ -78,16 +78,26 @@ exports.postDirections = (req, res, next) =>{
         const key  = req.body.key;
         const lat  = req.body.latitude;
         const lon = req.body.longitude;
-        const time  = req.body.timezone; 
+        const time  = req.body.timezone;
+        const temp = req.body.temp;
+        const hour = req.body.hour; 
         const post = { 
             key : key,
             latitude: lat,  
             longitude: lon, 
-            timezone: time
+            timezone: time,
+            temp : temp,
+            hour : hour
         };
         console.log(post.key);
         client.HMSET (
-            post.key , {'lat' : post.latitude, 'lon':  post.longitude  } , (err, reply) =>{
+            post.key , {
+                            'lat' : post.latitude, 
+                            'lon':  post.longitude, 
+                            'temp': post.temp, 
+                            'hour': post.hour  
+                        }, 
+                (err, reply) =>{
                 res.status(201).json({
                     message:'Done',post
                 });
