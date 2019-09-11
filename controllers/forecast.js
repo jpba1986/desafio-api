@@ -3,56 +3,91 @@ const fetch = require('node-fetch');
 const redis = require('redis');
 const client = redis.createClient();
 
-
 exports.setStartLocations =(req, res, next)=>{
     const array = [
-        {'lat':-29.645, 'lon':-72.125,  'city': 'SANTIAGO (CL)'},        
-        {'lat':-29.647, 'lon':-72.125,  'city': 'Zurich (CH)'},        
-        {'lat':-29.648, 'lon':-72.125,  'city': 'Auckland (NZ)'},        
-        {'lat':-29.6455, 'lon':-72.125,  'city': 'Sydney (AU)'},        
-        {'lat':-29.64, 'lon':-72.125,  'city': 'Londres (UK)'},        
-        {'lat':-29.65, 'lon':-72.125,  'city': 'Georgia (USA)'}
+        {'id': 'CITY_STGO','lat':-29.645, 'lon':-72.125,  'city': 'SANTIAGO (CL)'},        
+        {'id':'CITY_ZU', 'lat':-29.647, 'lon':-72.125,  'city': 'Zurich (CH)'},        
+        {'id':'CITY_AU', 'lat':-29.648, 'lon':-72.125,  'city': 'Auckland (NZ)'},        
+        {'id':'CITY_SY', 'lat':-29.6455, 'lon':-72.125,  'city': 'Sydney (AU)'},        
+        {'id':'CITY_LON', 'lat':-29.64, 'lon':-72.125,  'city': 'Londres (UK)'},        
+        {'id':'CITY_GEO', 'lat':-29.65, 'lon':-72.125,  'city': 'Georgia (USA)'}
     ];
-    console.log(array);
+    let countErr = 0 ;
     array.forEach(element => {
-      
-        client.hmset(
-            'locations', element    
-            , (err, reply) =>{
-                res.status(201).json({
-                    message:'Done',array
-                });
+          client.hmset(
+            element.id, element    
+            , (err, reply) =>{     
+                if (err){
+                    countErr++;
+                }           
                 console.log(reply);
             }
-        ); 
+        );   
     });
+    if (countErr ===0){
+        res.status(201).json({
+            message:'Done'
+        });
+    }else{
+        res.json({
+            'error ': error
+        });
+    }
 };
 
-exports.getLocations = (req, res, next )=>{
-    res.status(200).json({
-        location:[{
-            latitude:444444,  
-            longitude: 8888888,  
-            timezone:'America' 
-        }]
-    });
+exports.getKey =(req,res, next) =>{
+    try{
+        client.KEYS('CITY_*',(err, reply)=>{
+            res.json({
+                'data': reply
+            });  
+        }); 
+    }
+    catch(error){
+
+    }
+};
+
+exports.getLocations = async(req, res, next )=>{  
+    try{        
+        const location = req.params.location;
+        if (location ===undefined){                        
+            res.json({
+                'error': 'localizacion no encontrada'
+            }); 
+        }else{
+            client.HGETALL(location,(err, reply)=>{
+                res.json({
+                    'data': reply
+                });  
+            }); 
+        }  
+    }
+    catch(error){
+        console.log(error);
+        res.json({
+            'error': error
+        }); 
+    }       
 };
 
 
 
 exports.postDirections = (req, res, next) =>{
     try{
+        const key  = req.body.key;
         const lat  = req.body.latitude;
         const lon = req.body.longitude;
         const time  = req.body.timezone; 
         const post = { 
+            key : key,
             latitude: lat,  
             longitude: lon, 
             timezone: time
         };
-    
-        client.hmset(
-            'directions', post, (err, reply) =>{
+        console.log(post.key);
+        client.HMSET (
+            post.key , {'lat' : post.latitude, 'lon':  post.longitude  } , (err, reply) =>{
                 res.status(201).json({
                     message:'Done',post
                 });
