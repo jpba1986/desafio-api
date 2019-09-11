@@ -24,16 +24,17 @@ exports.postDirections = (req, res, next) =>{
 
 exports.getForecastData = async (req, res, next) =>{
     try{
-        const latitud  =req.body.latitud;
-        const longitud =req.body.longitud;
+        const latlon = req.params.latlon.split(',');
+        const latitud  =latlon[0];
+        const longitud =latlon[1];
         const darkskyAPIKEY = '2dcd0120d4db2f169cf0ca7fe725803e';
-        //const api_url = 'https://api.darksky.net/forecast/'+ darkskyAPIKEY +'/'+  latitud +','+ longitud +'?exclude=hourly,flags,minutely,daily,alerts,currently';
-        const api_url =`https://api.darksky.net/forecast/2dcd0120d4db2f169cf0ca7fe725803e/42.3601,-71.0589`;
+        const api_url = 'https://api.darksky.net/forecast/'+ darkskyAPIKEY +'/'+  latitud +','+ longitud +'?exclude=hourly,flags,minutely,daily,alerts';
         const fetch_response = await fetch(api_url);    
-        const json = fetch_response.json();
-        console.log(json); 
+        const json = await fetch_response.json();
+        res.json(json); 
     } catch(error){
-        console.log(error);
-    }
-  
+        res.json({
+            'error ': error
+        });
+    }  
 };
