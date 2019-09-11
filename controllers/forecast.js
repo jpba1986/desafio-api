@@ -138,7 +138,6 @@ exports.postSaveError =(req, res, next) =>{
                 res.status(201).json({
                     message:'Done',reply
                 });
-                console.log(reply);
             }
         );
     }
