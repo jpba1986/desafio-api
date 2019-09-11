@@ -14,6 +14,8 @@ router.get('/getForecastData/:latlon', forecastController.getForecastData);
 // POST
 router.post('/postDirections', forecastController.postDirections);
 
-router.post('/setStartLocations', forecastController.setStartLocations);
+router.post('/postSetStartLocations', forecastController.postSetStartLocations);
+
+router.post('/postSaveError', forecastController.postSaveError);
 
 module.exports = router;

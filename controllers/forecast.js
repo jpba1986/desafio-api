@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const redis = require('redis');
 const client = redis.createClient();
 
-exports.setStartLocations =(req, res, next)=>{
+exports.postSetStartLocations =(req, res, next)=>{
     const array = [
         {'id': 'CITY_STGO','lat':-33.4377968, 'lon':-70.6504451,  'city': 'SANTIAGO (CL)', 'temp': '', 'hour':''},        
         {'id':'CITY_ZU', 'lat':47.4133024, 'lon':8.656394,  'city': 'Zurich (CH)', 'temp': '', 'hour':''},        
@@ -44,7 +44,9 @@ exports.getKey =(req,res, next) =>{
         }); 
     }
     catch(error){
-
+        res.json({
+            'error ': error
+        });
     }
 };
 
@@ -64,14 +66,11 @@ exports.getLocations = async(req, res, next )=>{
         }  
     }
     catch(error){
-        console.log(error);
         res.json({
             'error': error
         }); 
     }       
 };
-
-
 
 exports.postDirections = (req, res, next) =>{
     try{
@@ -89,7 +88,6 @@ exports.postDirections = (req, res, next) =>{
             temp : temp,
             hour : hour
         };
-        console.log(post.key);
         client.HMSET (
             post.key , {
                             'lat' : post.latitude, 
@@ -99,9 +97,8 @@ exports.postDirections = (req, res, next) =>{
                         }, 
                 (err, reply) =>{
                 res.status(201).json({
-                    message:'Done',post
+                    message:'Done',reply
                 });
-                console.log(reply);
             }
         );
     }
@@ -109,9 +106,7 @@ exports.postDirections = (req, res, next) =>{
         res.json({
             'error ': error
         });
-
     }
-
 };
 
 exports.getForecastData = async (req, res, next) =>{
@@ -130,3 +125,27 @@ exports.getForecastData = async (req, res, next) =>{
         });
     }  
 };
+
+exports.postSaveError =(req, res, next) =>{
+    try{
+        const error  =req.body.err;
+        client.HMSET (
+            'api.errors' , {
+                            'timestamp' : Date.now(), 
+                            'contenido':  error
+                        }, 
+                (err, reply) =>{
+                res.status(201).json({
+                    message:'Done',reply
+                });
+                console.log(reply);
+            }
+        );
+    }
+    catch(error){
+        res.json({
+            'error ': error
+        });
+    }
+};
+
