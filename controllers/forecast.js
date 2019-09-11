@@ -5,12 +5,12 @@ const client = redis.createClient();
 
 exports.setStartLocations =(req, res, next)=>{
     const array = [
-        {'id': 'CITY_STGO','lat':-33.4377968, 'lon':-70.6504451,  'city': 'SANTIAGO (CL)'},        
-        {'id':'CITY_ZU', 'lat':47.4133024, 'lon':8.656394,  'city': 'Zurich (CH)'},        
-        {'id':'CITY_AU', 'lat':-36.5412811, 'lon':174.35096741,  'city': 'Auckland (NZ)'},        
-        {'id':'CITY_SY', 'lat':-33.8548157, 'lon':151.2164539,  'city': 'Sydney (AU)'},        
-        {'id':'CITY_LON', 'lat':51.4893335, 'lon':-0.14405508,  'city': 'Londres (UK)'},        
-        {'id':'CITY_GEO', 'lat':32.3293809, 'lon':-83.1137366,  'city': 'Georgia (USA)'}
+        {'id': 'CITY_STGO','lat':-33.4377968, 'lon':-70.6504451,  'city': 'SANTIAGO (CL)', 'temp': '', 'hour':''},        
+        {'id':'CITY_ZU', 'lat':47.4133024, 'lon':8.656394,  'city': 'Zurich (CH)', 'temp': '', 'hour':''},        
+        {'id':'CITY_AU', 'lat':-36.5412811, 'lon':174.35096741,  'city': 'Auckland (NZ)', 'temp': '', 'hour':''},        
+        {'id':'CITY_SY', 'lat':-33.8548157, 'lon':151.2164539,  'city': 'Sydney (AU)', 'temp': '', 'hour':''},        
+        {'id':'CITY_LON', 'lat':51.4893335, 'lon':-0.14405508,  'city': 'Londres (UK)', 'temp': '', 'hour':''},        
+        {'id':'CITY_GEO', 'lat':32.3293809, 'lon':-83.1137366,  'city': 'Georgia (USA)', 'temp': '', 'hour':''}
     ];
     let countErr = 0 ;
     array.forEach(element => {
