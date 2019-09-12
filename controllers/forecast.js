@@ -20,7 +20,7 @@ exports.postSetStartLocations =(req, res, next)=>{
                 if (err){
                     countErr++;
                 }           
-                console.log(reply);
+                //console.log(reply);
             }
         );   
     });
@@ -128,11 +128,11 @@ exports.getForecastData = async (req, res, next) =>{
 
 exports.postSaveError =(req, res, next) =>{
     try{
-        const error  =req.body.err;
+        const error  =req.body.error;
         client.HMSET (
             'api.errors' , {
                             'timestamp' : Date.now(), 
-                            'contenido':  error
+                            'contenido':  error.error
                         }, 
                 (err, reply) =>{
                 res.status(201).json({
